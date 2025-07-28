@@ -1,0 +1,153 @@
+body {
+    background: linear-gradient(120deg, #23272f 0%, #181A20 100%);
+    margin: 0;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    animation: bg-move 12s ease-in-out infinite alternate;
+}
+
+@keyframes bg-move {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+.glass-card {
+    background: rgba(30, 32, 40, 0.55);
+    border-radius: 32px;
+    box-shadow: 0 8px 32px 0 #000a, 0 1.5px 8px #ff910033;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    padding: 48px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    animation: card-fade-in 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes card-fade-in {
+    0% { opacity: 0; transform: scale(0.8) translateY(40px); }
+    80% { opacity: 1; transform: scale(1.05) translateY(-8px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.logo {
+    font-size: 8rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: logo-fade 2.5s ease-in-out infinite alternate;
+    transition: transform 0.6s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.6s ease;
+}
+
+.logo:hover {
+    transform: scale(1.08) rotate(-2deg);
+    opacity: 0.95;
+}
+
+@keyframes logo-fade {
+    0% { opacity: 1; }
+    50% { opacity: 0.85; }
+    100% { opacity: 1; }
+}
+
+.a {
+    color: #fff;
+    text-shadow: 0 2px 8px #222;
+    animation: none;
+    transition: color 0.4s, text-shadow 0.4s;
+}
+
+.a:hover {
+    color: #e0e0e0;
+    text-shadow: 0 4px 16px #fff;
+}
+
+.seven {
+    color: #ff9100;
+    text-shadow: 0 2px 8px #222;
+    animation: none;
+    transition: color 0.4s, text-shadow 0.4s;
+}
+
+.seven:hover {
+    color: #ffb347;
+    text-shadow: 0 4px 16px #ff9100;
+}
+
+.a7-logo {
+    font-size: 8rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: logo-appear 1.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes logo-appear {
+    0% { opacity: 0; transform: scale(0.7) rotate(-10deg); }
+    80% { opacity: 1; transform: scale(1.08) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.a7-a {
+    color: #fff;
+    text-shadow: 0 2px 16px #222, 0 0 24px #fff2;
+    transition: color 0.4s, text-shadow 0.4s;
+}
+
+.a7-7 {
+    color: #ff9100;
+    text-shadow: 0 2px 16px #ff9100, 0 0 24px #ff910055;
+    transition: color 0.4s, text-shadow 0.4s;
+}
+
+.a7-logo:hover .a7-a {
+    color: #e0e0e0;
+    text-shadow: 0 4px 32px #fff, 0 0 32px #fff5;
+}
+
+.a7-logo:hover .a7-7 {
+    color: #ffb347;
+    text-shadow: 0 4px 32px #ff9100, 0 0 32px #ffb34788;
+}
+
+.glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, #ff910055 0%, #181A20 80%);
+    filter: blur(48px);
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0.7;
+    animation: glow-pulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
