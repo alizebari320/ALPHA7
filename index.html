@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A7</title>
+    <title>A7 - Enhanced Particles</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,19 +16,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // This initializes the particles.js library with a custom configuration
+        // This initializes particles.js with the ENHANCED configuration
         particlesJS("particles-js", {
             "particles": {
                 "number": {
-                    "value": 80, // Number of particles
+                    "value": 100, // Slightly more particles
                     "density": { "enable": true, "value_area": 800 }
                 },
-                "color": { "value": "#ffffff" }, // Particle color
+                "color": { "value": "#ffffff" }, // Particle color remains white
                 "shape": { "type": "circle" },
                 "opacity": {
-                    "value": 0.5,
-                    "random": false,
-                    "anim": { "enable": false }
+                    "value": 0.8, // More visible particles
+                    "random": true, // Random opacities
+                    "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false }
                 },
                 "size": {
                     "value": 3,
@@ -38,13 +38,13 @@
                 "line_linked": {
                     "enable": true,
                     "distance": 150,
-                    "color": "#ffffff", // Line color
-                    "opacity": 0.4,
+                    "color": "#ff6600", // ENHANCEMENT: Lines are now orange
+                    "opacity": 0.6,
                     "width": 1
                 },
                 "move": {
                     "enable": true,
-                    "speed": 2, // Speed of particles
+                    "speed": 3, // Slightly faster movement
                     "direction": "none",
                     "random": false,
                     "straight": false,
@@ -55,15 +55,15 @@
             "interactivity": {
                 "detect_on": "canvas",
                 "events": {
-                    "onhover": { "enable": true, "mode": "grab" }, // Makes lines grabable
-                    "onclick": { "enable": true, "mode": "push" }, // Pushes particles on click
+                    "onhover": { "enable": true, "mode": "repulse" }, // ENHANCEMENT: Mouse pushes particles away
+                    "onclick": { "enable": true, "mode": "push" },
                     "resize": true
                 },
                 "modes": {
-                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                    "grab": { "distance": 400, "line_linked": { "opacity": 1 } },
                     "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8 },
-                    "repulse": { "distance": 200 },
-                    "push": { "particles_nb": 4 }, // Add 4 particles on click
+                    "repulse": { "distance": 100, "duration": 0.4 }, // Configure the repulsion effect
+                    "push": { "particles_nb": 4 },
                     "remove": { "particles_nb": 2 }
                 }
             },
