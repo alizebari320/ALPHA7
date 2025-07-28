@@ -1,18 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>A7 Tech Homepage</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A7</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="tech-bg"></div>
-  <div class="center-content">
-    <div class="glass-card">
-      <span class="a7-logo">
-        <span class="a7-a">A</span><span class="a7-7">7</span>
-      </span>
+
+    <div id="particles-js"></div>
+
+    <div class="logo-container">
+        <span class="logo-a">A</span><span class="logo-7">7</span>
     </div>
-  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // This initializes the particles.js library with a custom configuration
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80, // Number of particles
+                    "density": { "enable": true, "value_area": 800 }
+                },
+                "color": { "value": "#ffffff" }, // Particle color
+                "shape": { "type": "circle" },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": { "enable": false }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": { "enable": false }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff", // Line color
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2, // Speed of particles
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" }, // Makes lines grabable
+                    "onclick": { "enable": true, "mode": "push" }, // Pushes particles on click
+                    "resize": true
+                },
+                "modes": {
+                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                    "bubble": { "distance": 400, "size": 40, "duration": 2, "opacity": 8 },
+                    "repulse": { "distance": 200 },
+                    "push": { "particles_nb": 4 }, // Add 4 particles on click
+                    "remove": { "particles_nb": 2 }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+
 </body>
 </html>
