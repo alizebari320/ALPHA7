@@ -3,77 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A7 - Spotlight Core</title>
+    <title>A7 - Brush Stroke</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="particles-js"></div>
-    <div class="spotlight"></div>
+    <canvas id="main-canvas"></canvas>
 
     <div class="logo-container">
-        <span class="logo-a logo-text" data-text="A">A</span><span class="logo-7 logo-text" data-text="7">7</span>
+        <svg class="logo-svg" viewBox="0 0 300 200">
+            <defs>
+                <filter id="paint-texture">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.1 0.1" numOctaves="1" result="turbulence" />
+                    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+            </defs>
+            <path class="logo-a logo-stroke" d="M 50 150 L 100 50" />
+            <path class="logo-a logo-stroke" d="M 100 50 L 150 150" />
+            <path class="logo-a logo-stroke" d="M 75 110 L 125 110" />
+            <path class="logo-7 logo-stroke" d="M 170 50 L 250 50" />
+            <path class="logo-7 logo-stroke" d="M 250 50 L 200 150" />
+        </svg>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // particles.js configuration (unchanged)
-        particlesJS("particles-js", {
-            "particles": { "number": { "value": 100 }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.8, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1 }}, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ff6600", "opacity": 0.6 }, "move": { "enable": true, "speed": 3, "direction": "none", "out_mode": "out" }},
-            "interactivity": { "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 }}},
-            "retina_detect": true
-        });
-
-        // --- All Logo & Page Animations ---
         document.addEventListener('DOMContentLoaded', () => {
-            const logoContainer = document.querySelector('.logo-container');
-            const logoTextElements = document.querySelectorAll('.logo-text');
-            const spotlight = document.querySelector('.spotlight');
+            // --- Background Animation (Stars and Beams) ---
+            const canvas = document.getElementById('main-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-            // --- NEW: Dynamic Cursor Light ---
-            document.addEventListener('mousemove', (e) => {
-                // Use CSS variables to pass mouse coordinates to the CSS
-                spotlight.style.setProperty('--mouse-x', e.clientX + 'px');
-                spotlight.style.setProperty('--mouse-y', e.clientY + 'px');
+            const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+            window.addEventListener('mousemove', (event) => {
+                mouse.x = event.x;
+                mouse.y = event.y;
+            });
+            
+            class Star {
+                constructor(x, y, radius) { this.x = x; this.y = y; this.radius = radius; }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.fill();
+                }
+            }
+
+            class Beam {
+                constructor(x, y, color) { this.x = x; this.y = y; this.color = color; }
+                draw() {
+                    const gradient = ctx.createLinearGradient(this.x, this.y, mouse.x, mouse.y);
+                    gradient.addColorStop(0, `rgba(${this.color}, 0.2)`);
+                    gradient.addColorStop(0.7, `rgba(${this.color}, 0)`);
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
+                    const spread = Math.PI / 16;
+                    ctx.lineTo(mouse.x + Math.cos(angle + spread) * 50, mouse.y + Math.sin(angle + spread) * 50);
+                    ctx.lineTo(mouse.x + Math.cos(angle - spread) * 50, mouse.y + Math.sin(angle - spread) * 50);
+                    ctx.closePath();
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                }
+            }
+
+            let stars = [];
+            let beams = [];
+            function init() {
+                stars = [];
+                const starCount = 300;
+                for (let i = 0; i < starCount; i++) {
+                    stars.push(new Star(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.2));
+                }
+                beams = [
+                    new Beam(0, 0, '255, 102, 0'), new Beam(canvas.width, 0, '255, 255, 255'),
+                    new Beam(0, canvas.height, '255, 255, 255'), new Beam(canvas.width, canvas.height, '255, 102, 0'),
+                ];
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => star.draw());
+                beams.forEach(beam => beam.draw());
+                requestAnimationFrame(animate);
+            }
+            init();
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                init();
             });
 
-            // --- 1. Initial Decoder/Shuffle Animation (Unchanged) ---
-            const chars = '!<>-_\\/[]{}—=+*^?#________';
-            const decodeText = (element) => {
-                const originalText = element.dataset.text;
-                let iterations = 0;
-                const interval = setInterval(() => {
-                    element.innerText = originalText.split('').map((letter, index) => (index < iterations) ? originalText[index] : chars[Math.floor(Math.random() * chars.length)]).join('');
-                    if(iterations >= originalText.length){ clearInterval(interval); }
-                    iterations += 1 / 3;
-                }, 40);
-            };
-            logoTextElements.forEach(decodeText);
 
-            // --- 2. Interactive Glitch on Hover (Unchanged) ---
+            // --- Logo Interactive Animations (Unchanged) ---
+            const logoContainer = document.querySelector('.logo-container');
             logoContainer.addEventListener('mouseenter', () => {
                 logoContainer.classList.add('glitch-active');
                 logoContainer.dataset.text = "A7";
                 setTimeout(() => logoContainer.classList.remove('glitch-active'), 550);
             });
-            
-            // --- 3. 3D Tilt Effect (Unchanged) ---
             const walk = 20;
             const tilt = (e) => {
                 const { offsetWidth: width, offsetHeight: height } = logoContainer;
                 let { offsetX: x, offsetY: y } = e;
-                if (e.target.classList.contains('logo-text')) { x += e.target.offsetLeft; y += e.target.offsetTop; }
+                if (e.target.tagName === 'path' || e.target.tagName === 'svg') {
+                     x = e.clientX - logoContainer.getBoundingClientRect().left;
+                     y = e.clientY - logoContainer.getBoundingClientRect().top;
+                }
                 const xWalk = (x / width * walk) - (walk / 2);
                 const yWalk = (y / height * walk) - (walk / 2);
                 logoContainer.style.transform = `perspective(800px) rotateY(${xWalk}deg) rotateX(${-yWalk}deg)`;
             };
             const resetTilt = () => {
-                 logoContainer.style.transform = `perspective(800px) rotateY(0deg) rotateX(0deg)`;
+                logoContainer.style.transform = `perspective(800px) rotateY(0deg) rotateX(0deg)`;
             };
             logoContainer.addEventListener('mousemove', tilt);
             logoContainer.addEventListener('mouseleave', resetTilt);
         });
-
     </script>
 </body>
 </html>
