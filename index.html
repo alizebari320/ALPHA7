@@ -5,9 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A7 - Brush Stroke</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #000000; /* Full dark black background */
+            min-height: 100vh;
+            margin: 0;
+            color: #fff;
+            /* Changed font to Roboto */
+            font-family: 'Roboto', 'Inter', Arial, sans-serif;
+            overflow: hidden;
+        }
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            /* Removed initial filter for no light glow */
+            filter: none;
+            transition: transform 0.5s; /* Keep transform transition, remove filter transition */
+        }
+        .logo-svg {
+            width: 320px;
+            height: 220px;
+            display: block;
+        }
+        .logo-a {
+            stroke: #fff;
+            stroke-width: 12;
+            filter: url(#paint-texture);
+        }
+        .logo-7 {
+            stroke: #ff6600;
+            stroke-width: 12;
+            filter: url(#paint-texture);
+        }
+        .logo-stroke {
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* Adjusted glitch active state to remove light glow */
+        .glitch-active {
+            /* Removed drop-shadows and brightness/saturate for no light glow */
+            filter: none;
+            animation: logo-glitch 0.8s linear; /* Slower glitch animation */
+        }
+        /* The logo-glitch keyframes are still present but will have no visible effect on filter if filter is none */
+        @keyframes logo-glitch {
+            0% { filter: none; }
+            50% { filter: none; }
+            100% { filter: none; }
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Re-added the canvas element for the static background elements -->
     <canvas id="main-canvas"></canvas>
 
     <div class="logo-container">
@@ -18,110 +72,241 @@
                     <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" xChannelSelector="R" yChannelSelector="G" />
                 </filter>
             </defs>
+            <!-- Paths for 'A' - ensuring the horizontal line is clearly defined -->
             <path class="logo-a logo-stroke" d="M 50 150 L 100 50" />
             <path class="logo-a logo-stroke" d="M 100 50 L 150 150" />
             <path class="logo-a logo-stroke" d="M 75 110 L 125 110" />
-            <path class="logo-7 logo-stroke" d="M 170 50 L 250 50" />
-            <path class="logo-7 logo-stroke" d="M 250 50 L 200 150" />
+            <!-- Combined path for '7' -->
+            <path class="logo-7 logo-stroke" d="M 170 50 L 250 50 L 200 150" />
         </svg>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Background Animation (Stars and Beams) ---
+            // --- Static Background (Stars & Galaxies) ---
             const canvas = document.getElementById('main-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
-            window.addEventListener('mousemove', (event) => {
-                mouse.x = event.x;
-                mouse.y = event.y;
-            });
-            
+            // Star class (no movement or fading)
             class Star {
-                constructor(x, y, radius) { this.x = x; this.y = y; this.radius = radius; }
+                constructor(x, y, radius, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = radius;
+                    this.color = color;
+                    this.alpha = Math.random() * 0.4 + 0.1; // Dimmer initial alpha for stars
+                }
+                // No update method for static stars
                 draw() {
+                    ctx.save();
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
+                    gradient.addColorStop(0, `rgba(${this.color},${this.alpha})`);
+                    gradient.addColorStop(1, `rgba(${this.color},0)`);
+                    ctx.fillStyle = gradient;
+                    ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
+                    ctx.shadowColor = `rgba(${this.color},${this.alpha})`;
+                    ctx.shadowBlur = this.radius * 4; // Slightly reduced blur for stars
                     ctx.fill();
+                    ctx.restore();
                 }
             }
 
-            class Beam {
-                constructor(x, y, color) { this.x = x; this.y = y; this.color = color; }
+            // Galaxy class (no movement or rotation)
+            class Galaxy {
+                constructor(x, y, radius, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.radius = radius;
+                    this.color = color;
+                    this.particles = [];
+                    for (let i = 0; i < 50; i++) { // Reduced particles for dimmer galaxies
+                        const angle = Math.random() * Math.PI * 2;
+                        const dist = Math.random() * this.radius * 0.9 + this.radius * 0.1;
+                        this.particles.push({
+                            x: Math.cos(angle) * dist,
+                            y: Math.sin(angle) * dist,
+                            radius: Math.random() * 1.0 + 0.2, // Slightly smaller particles
+                            alpha: Math.random() * 0.3 + 0.1 // Dimmer particles
+                        });
+                    }
+                }
+                // No update method for static galaxies
                 draw() {
-                    const gradient = ctx.createLinearGradient(this.x, this.y, mouse.x, mouse.y);
-                    gradient.addColorStop(0, `rgba(${this.color}, 0.2)`);
-                    gradient.addColorStop(0.7, `rgba(${this.color}, 0)`);
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    // No rotation
+                    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius * 0.5); 
+                    core.addColorStop(0, `rgba(${this.color},0.05)`); // Even less intense core glow
+                    core.addColorStop(1, `rgba(${this.color},0)`);
                     ctx.beginPath();
-                    ctx.moveTo(this.x, this.y);
-                    const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
-                    const spread = Math.PI / 16;
-                    ctx.lineTo(mouse.x + Math.cos(angle + spread) * 50, mouse.y + Math.sin(angle + spread) * 50);
-                    ctx.lineTo(mouse.x + Math.cos(angle - spread) * 50, mouse.y + Math.sin(angle - spread) * 50);
-                    ctx.closePath();
-                    ctx.fillStyle = gradient;
+                    ctx.arc(0, 0, this.radius * 0.5, 0, Math.PI * 2);
+                    ctx.fillStyle = core;
                     ctx.fill();
+                    this.particles.forEach(p => {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(${this.color},${p.alpha})`;
+                        ctx.shadowColor = `rgba(${this.color},${p.alpha})`;
+                        ctx.shadowBlur = 4; // Slightly reduced blur for galaxies
+                        ctx.fill();
+                    });
+                    ctx.restore();
                 }
             }
 
             let stars = [];
-            let beams = [];
-            function init() {
+            let galaxies = [];
+            function initBackground() { // Renamed to avoid confusion with logo init
                 stars = [];
-                const starCount = 300;
+                const starColors = ['255,255,255','200,220,255','255,200,220', '180,255,255'];
+                const starCount = 1000; // Reduced star count
                 for (let i = 0; i < starCount; i++) {
-                    stars.push(new Star(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.2));
+                    const color = starColors[Math.floor(Math.random() * starColors.length)];
+                    stars.push(new Star(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5 + 0.3, color)); // Slightly smaller stars
                 }
-                beams = [
-                    new Beam(0, 0, '255, 102, 0'), new Beam(canvas.width, 0, '255, 255, 255'),
-                    new Beam(0, canvas.height, '255, 255, 255'), new Beam(canvas.width, canvas.height, '255, 102, 0'),
-                ];
+                galaxies = [];
+                const galaxyColors = ['255,102,0','200,220,255','255,255,255'];
+                const galaxyCount = 5; // Reduced galaxy count
+                for (let i = 0; i < galaxyCount; i++) {
+                    const color = galaxyColors[Math.floor(Math.random() * galaxyColors.length)];
+                    galaxies.push(new Galaxy(
+                        Math.random() * canvas.width,
+                        Math.random() * canvas.height,
+                        Math.random() * 100 + 50, // Smaller galaxies
+                        color
+                    ));
+                }
+                drawStaticBackground(); // Draw background once
             }
 
-            function animate() {
+            function drawStaticBackground() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                stars.forEach(star => star.draw());
-                beams.forEach(beam => beam.draw());
-                requestAnimationFrame(animate);
-            }
-            init();
-            animate();
+                ctx.fillStyle = '#000000'; 
+                ctx.fillRect(0,0,canvas.width,canvas.height);
 
+                galaxies.forEach(galaxy => { galaxy.draw(); });
+                stars.forEach(star => { star.draw(); });
+            }
+
+            initBackground(); // Initialize and draw static background on load
             window.addEventListener('resize', () => {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
-                init();
+                initBackground(); // Re-initialize and redraw on resize
             });
 
-
-            // --- Logo Interactive Animations (Unchanged) ---
+            // Mouse for logo beams (kept for 3D tilt effect)
             const logoContainer = document.querySelector('.logo-container');
+            const logoSVG = document.querySelector('.logo-svg');
+            
+            // Animate the A7 stroke drawing
+            const logoA = document.querySelectorAll('.logo-a');
+            const logo7 = document.querySelectorAll('.logo-7');
+
+            // Function to animate strokes for left-to-right effect
+            const animateLeftToRightStrokes = (elements, baseDelay, duration, bezier) => {
+                elements.forEach((path, i) => {
+                    path.style.transition = 'none'; // Reset transition
+                    const length = path.getTotalLength();
+                    path.style.strokeDasharray = `${length} ${length}`; // Make dash length equal to path length
+                    path.style.strokeDashoffset = length; // Start fully hidden
+
+                    // Determine individual delay based on path index for A, and then for 7
+                    let currentDelay = baseDelay;
+                    if (path.classList.contains('logo-a')) {
+                        if (i === 0) currentDelay += 0; // Left leg
+                        else if (i === 1) currentDelay += 600; // Right leg starts after left (slightly faster delay)
+                        else if (i === 2) currentDelay += 1200; // Horizontal line starts after both legs begin (slightly faster delay)
+                    } else if (path.classList.contains('logo-7')) {
+                        // For '7', it's a single path, so no internal stagger needed, just overall delay
+                        currentDelay = baseDelay; 
+                    }
+                    
+                    setTimeout(() => {
+                        path.style.transition = `stroke-dashoffset ${duration}s ${bezier}`;
+                        path.style.strokeDashoffset = 0; // Reveal the stroke
+                    }, currentDelay);
+                });
+            };
+
+            // Initial animation for A (left-to-right emphasis)
+            animateLeftToRightStrokes(logoA, 1500, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'); // Decreased baseDelay and duration
+
+            // Initial animation for 7 (left-to-right emphasis, starts after A)
+            // Calculate delay for 7 based on A's animation completion
+            const delayFor7 = 1500 + (logoA.length * 600) + 1500; // Adjusted base delay + A's max stagger + buffer
+            animateLeftToRightStrokes(logo7, delayFor7, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'); // Decreased duration
+
+
+            // Glow effect on hover (adjusted timing)
             logoContainer.addEventListener('mouseenter', () => {
                 logoContainer.classList.add('glitch-active');
-                logoContainer.dataset.text = "A7";
-                setTimeout(() => logoContainer.classList.remove('glitch-active'), 550);
+                // Removed logoSVG.style.filter for no light glow
+                setTimeout(() => logoContainer.classList.remove('glitch-active'), 800); /* Slower glitch duration */
             });
-            const walk = 20;
+            logoContainer.addEventListener('mouseleave', () => {
+                // Removed logoSVG.style.filter for no light glow
+            });
+
+            // 3D tilt
+            const walk = 15; /* Slightly less intense tilt */
             const tilt = (e) => {
                 const { offsetWidth: width, offsetHeight: height } = logoContainer;
                 let { offsetX: x, offsetY: y } = e;
                 if (e.target.tagName === 'path' || e.target.tagName === 'svg') {
-                     x = e.clientX - logoContainer.getBoundingClientRect().left;
-                     y = e.clientY - logoContainer.getBoundingClientRect().top;
+                    x = e.clientX - logoContainer.getBoundingClientRect().left;
+                    y = e.clientY - logoContainer.getBoundingClientRect().top;
                 }
                 const xWalk = (x / width * walk) - (walk / 2);
                 const yWalk = (y / height * walk) - (walk / 2);
-                logoContainer.style.transform = `perspective(800px) rotateY(${xWalk}deg) rotateX(${-yWalk}deg)`;
+                logoContainer.style.transform = `translate(-50%, -50%) perspective(800px) rotateY(${xWalk}deg) rotateX(${-yWalk}deg)`;
             };
             const resetTilt = () => {
-                logoContainer.style.transform = `perspective(800px) rotateY(0deg) rotateX(0deg)`;
+                logoContainer.style.transform = 'translate(-50%, -50%) perspective(800px) rotateY(0deg) rotateX(0deg)';
             };
             logoContainer.addEventListener('mousemove', tilt);
             logoContainer.addEventListener('mouseleave', resetTilt);
+
+            // Replay logo animation on click (new style)
+            logoContainer.addEventListener('click', () => {
+                // Replay A strokes
+                logoA.forEach((path, i) => {
+                    path.style.transition = 'none';
+                    path.style.strokeDasharray = path.getTotalLength();
+                    path.style.strokeDashoffset = path.getTotalLength();
+                    void path.offsetWidth;
+                    let delay = 300; // Base delay for A on click
+                    let duration = 3.0; // Decreased duration
+                    let bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+                    if (i === 0) { // First leg of A
+                        delay += 0;
+                    } else if (i === 1) { // Second leg of A
+                        delay += 600; // Decreased delay
+                    } else if (i === 2) { // Horizontal line of A
+                        delay += 1200; // Decreased delay
+                        duration = 2.5; // Shorter duration for horizontal line, but still slower
+                    }
+                    
+                    setTimeout(() => {
+                        path.style.transition = `stroke-dashoffset ${duration}s ${bezier}`;
+                        path.style.strokeDashoffset = 0;
+                    }, delay);
+                });
+
+                // Replay 7 stroke
+                const replayDelayFor7 = 300 + (logoA.length * 600) + 1500; // Adjusted delay
+                animateLeftToRightStrokes(logo7, replayDelayFor7, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)');
+
+                // Add glitch effect
+                logoContainer.classList.add('glitch-active');
+                // Removed logoSVG.style.filter for no light glow
+                setTimeout(() => logoContainer.classList.remove('glitch-active'), 800); /* Slower glitch duration */
+                // Removed logoSVG.style.filter for no light glow
+            });
         });
     </script>
 </body>
