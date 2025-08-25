@@ -3,310 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A7 - Brush Stroke</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ALPHA | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            background: #000000; /* Full dark black background */
-            min-height: 100vh;
+        :root {
+            --primary-bg: linear-gradient(135deg, #0c0c14 0%, #1a1a2e 50%, #16213e 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --accent-gold: #ffd700;
+            --accent-pink: #ff6b95;
+            --glow-color: rgba(255, 215, 0, 0.4);
+            --pulse-color: rgba(255, 107, 149, 0.3);
+            --grid-opacity: 0.03;
+        }
+
+        * {
             margin: 0;
-            color: #fff;
-            /* Changed font to Roboto */
-            font-family: 'Roboto', 'Inter', Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: var(--primary-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
             overflow: hidden;
+            perspective: 1000px;
         }
-        .logo-container {
+
+        /* Advanced Tech Background System */
+        .tech-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .layer-1 {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            /* Removed initial filter for no light glow */
-            filter: none;
-            transition: transform 0.5s; /* Keep transform transition, remove filter transition */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.07) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 107, 149, 0.07) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(102, 126, 234, 0.07) 0%, transparent 50%);
+            animation: float 25s infinite ease-in-out;
         }
-        .logo-svg {
-            width: 320px;
-            height: 220px;
-            display: block;
+
+        .layer-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(0deg, transparent 49%, rgba(255, 215, 0, var(--grid-opacity)) 50%, transparent 51%),
+                linear-gradient(90deg, transparent 49%, rgba(255, 107, 149, var(--grid-opacity)) 50%, transparent 51%);
+            background-size: 100px 100px;
+            animation: gridFlow 20s linear infinite;
         }
-        .logo-a {
-            stroke: #fff;
-            stroke-width: 12;
-            filter: url(#paint-texture);
+
+        .layer-3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 70%),
+                radial-gradient(circle at 70% 60%, rgba(255, 107, 149, 0.05) 0%, transparent 70%),
+                radial-gradient(circle at 50% 20%, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            animation: pulseRadial 15s infinite ease-in-out;
         }
-        .logo-7 {
-            stroke: #ff6600;
-            stroke-width: 12;
-            filter: url(#paint-texture);
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(1deg); }
+            66% { transform: translateY(5px) rotate(-1deg); }
         }
-        .logo-stroke {
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+
+        @keyframes gridFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
         }
-        /* Adjusted glitch active state to remove light glow */
-        .glitch-active {
-            /* Removed drop-shadows and brightness/saturate for no light glow */
-            filter: none;
-            animation: logo-glitch 0.8s linear; /* Slower glitch animation */
+
+        @keyframes pulseRadial {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
-        /* The logo-glitch keyframes are still present but will have no visible effect on filter if filter is none */
-        @keyframes logo-glitch {
-            0% { filter: none; }
-            50% { filter: none; }
-            100% { filter: none; }
+
+        /* Interactive Content */
+        .content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .alpha-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(5rem, 12vw, 9rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px var(--glow-color));
+            animation: 
+                shimmer 3s infinite,
+                pulse 4s infinite alternate,
+                zoomIn 1s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes pulse {
+            0% { filter: drop-shadow(0 0 20px var(--glow-color)); }
+            100% { filter: drop-shadow(0 0 35px var(--glow-color)); }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.98);
+                opacity: 0.9;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .coming-soon {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1.2s forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .decorative-line {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            margin: 2rem auto;
+            opacity: 0;
+            animation: fadeInScale 1.5s forwards;
+            animation-delay: 1.2s;
+            transform-origin: center;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            to {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        /* Dynamic Particle System */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatParticle 20s infinite linear;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Light Ray Effect */
+        .light-rays {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .ray {
+            position: absolute;
+            width: 2px;
+            height: 100vh;
+            background: linear-gradient(to bottom, var(--light-ray), transparent);
+            animation: rayMove 8s linear infinite;
+        }
+
+        @keyframes rayMove {
+            0% { transform: translateX(-100%) rotate(15deg); }
+            100% { transform: translateX(100%) rotate(15deg); }
+        }
+
+        /* Interactive Hover Effects */
+        .alpha-title:hover {
+            filter: drop-shadow(0 0 30px var(--glow-color)) drop-shadow(0 0 50px var(--pulse-color));
+            animation-play-state: paused;
+            transform: scale(1.02);
+        }
+
+        .decorative-line:hover {
+            background: linear-gradient(90deg, transparent, var(--accent-gold), var(--accent-pink), transparent);
+            animation-duration: 0.5s;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .alpha-title {
+                font-size: clamp(4rem, 10vw, 7rem);
+            }
+            
+            .coming-soon {
+                font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            }
+        }
+
+        /* Mouse Follow Particles */
+        .mouse-trail {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .trail-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-
-    <!-- Re-added the canvas element for the static background elements -->
-    <canvas id="main-canvas"></canvas>
-
-    <div class="logo-container">
-        <svg class="logo-svg" viewBox="0 0 300 200">
-            <defs>
-                <filter id="paint-texture">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.1 0.1" numOctaves="1" result="turbulence" />
-                    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="5" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-            </defs>
-            <!-- Paths for 'A' - ensuring the horizontal line is clearly defined -->
-            <path class="logo-a logo-stroke" d="M 50 150 L 100 50" />
-            <path class="logo-a logo-stroke" d="M 100 50 L 150 150" />
-            <path class="logo-a logo-stroke" d="M 75 110 L 125 110" />
-            <!-- Combined path for '7' -->
-            <path class="logo-7 logo-stroke" d="M 170 50 L 250 50 L 200 150" />
-        </svg>
+    <!-- Tech Background System -->
+    <div class="tech-background">
+        <div class="layer-1"></div>
+        <div class="layer-2"></div>
+        <div class="layer-3"></div>
+    </div>
+    
+    <!-- Light Rays -->
+    <div class="light-rays">
+        <div class="ray" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="ray" style="left: 30%; animation-delay: 1s;"></div>
+        <div class="ray" style="left: 50%; animation-delay: 2s;"></div>
+        <div class="ray" style="left: 70%; animation-delay: 3s;"></div>
+        <div class="ray" style="left: 90%; animation-delay: 4s;"></div>
+    </div>
+    
+    <!-- Dynamic Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Mouse Trail -->
+    <div class="mouse-trail" id="mouseTrail"></div>
+    
+    <div class="content">
+        <h1 class="alpha-title">ALPHA</h1>
+        <p class="coming-soon">coming soon</p>
+        <div class="decorative-line"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Static Background (Stars & Galaxies) ---
-            const canvas = document.getElementById('main-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            // Star class (no movement or fading)
-            class Star {
-                constructor(x, y, radius, color) {
-                    this.x = x;
-                    this.y = y;
-                    this.radius = radius;
-                    this.color = color;
-                    this.alpha = Math.random() * 0.4 + 0.1; // Dimmer initial alpha for stars
-                }
-                // No update method for static stars
-                draw() {
-                    ctx.save();
-                    ctx.beginPath();
-                    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 2);
-                    gradient.addColorStop(0, `rgba(${this.color},${this.alpha})`);
-                    gradient.addColorStop(1, `rgba(${this.color},0)`);
-                    ctx.fillStyle = gradient;
-                    ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
-                    ctx.shadowColor = `rgba(${this.color},${this.alpha})`;
-                    ctx.shadowBlur = this.radius * 4; // Slightly reduced blur for stars
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
-
-            // Galaxy class (no movement or rotation)
-            class Galaxy {
-                constructor(x, y, radius, color) {
-                    this.x = x;
-                    this.y = y;
-                    this.radius = radius;
-                    this.color = color;
-                    this.particles = [];
-                    for (let i = 0; i < 50; i++) { // Reduced particles for dimmer galaxies
-                        const angle = Math.random() * Math.PI * 2;
-                        const dist = Math.random() * this.radius * 0.9 + this.radius * 0.1;
-                        this.particles.push({
-                            x: Math.cos(angle) * dist,
-                            y: Math.sin(angle) * dist,
-                            radius: Math.random() * 1.0 + 0.2, // Slightly smaller particles
-                            alpha: Math.random() * 0.3 + 0.1 // Dimmer particles
-                        });
-                    }
-                }
-                // No update method for static galaxies
-                draw() {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    // No rotation
-                    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius * 0.5); 
-                    core.addColorStop(0, `rgba(${this.color},0.05)`); // Even less intense core glow
-                    core.addColorStop(1, `rgba(${this.color},0)`);
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.radius * 0.5, 0, Math.PI * 2);
-                    ctx.fillStyle = core;
-                    ctx.fill();
-                    this.particles.forEach(p => {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(${this.color},${p.alpha})`;
-                        ctx.shadowColor = `rgba(${this.color},${p.alpha})`;
-                        ctx.shadowBlur = 4; // Slightly reduced blur for galaxies
-                        ctx.fill();
-                    });
-                    ctx.restore();
-                }
-            }
-
-            let stars = [];
-            let galaxies = [];
-            function initBackground() { // Renamed to avoid confusion with logo init
-                stars = [];
-                const starColors = ['255,255,255','200,220,255','255,200,220', '180,255,255'];
-                const starCount = 1000; // Reduced star count
-                for (let i = 0; i < starCount; i++) {
-                    const color = starColors[Math.floor(Math.random() * starColors.length)];
-                    stars.push(new Star(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5 + 0.3, color)); // Slightly smaller stars
-                }
-                galaxies = [];
-                const galaxyColors = ['255,102,0','200,220,255','255,255,255'];
-                const galaxyCount = 5; // Reduced galaxy count
-                for (let i = 0; i < galaxyCount; i++) {
-                    const color = galaxyColors[Math.floor(Math.random() * galaxyColors.length)];
-                    galaxies.push(new Galaxy(
-                        Math.random() * canvas.width,
-                        Math.random() * canvas.height,
-                        Math.random() * 100 + 50, // Smaller galaxies
-                        color
-                    ));
-                }
-                drawStaticBackground(); // Draw background once
-            }
-
-            function drawStaticBackground() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#000000'; 
-                ctx.fillRect(0,0,canvas.width,canvas.height);
-
-                galaxies.forEach(galaxy => { galaxy.draw(); });
-                stars.forEach(star => { star.draw(); });
-            }
-
-            initBackground(); // Initialize and draw static background on load
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                initBackground(); // Re-initialize and redraw on resize
-            });
-
-            // Mouse for logo beams (kept for 3D tilt effect)
-            const logoContainer = document.querySelector('.logo-container');
-            const logoSVG = document.querySelector('.logo-svg');
+        // Create Advanced Particle System
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
             
-            // Animate the A7 stroke drawing
-            const logoA = document.querySelectorAll('.logo-a');
-            const logo7 = document.querySelectorAll('.logo-7');
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${Math.random() * 25 + 15}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
 
-            // Function to animate strokes for left-to-right effect
-            const animateLeftToRightStrokes = (elements, baseDelay, duration, bezier) => {
-                elements.forEach((path, i) => {
-                    path.style.transition = 'none'; // Reset transition
-                    const length = path.getTotalLength();
-                    path.style.strokeDasharray = `${length} ${length}`; // Make dash length equal to path length
-                    path.style.strokeDashoffset = length; // Start fully hidden
+        // Create Mouse Trail Effect
+        function createMouseTrail() {
+            const mouseTrail = document.getElementById('mouseTrail');
+            let mouseX = 0, mouseY = 0;
 
-                    // Determine individual delay based on path index for A, and then for 7
-                    let currentDelay = baseDelay;
-                    if (path.classList.contains('logo-a')) {
-                        if (i === 0) currentDelay += 0; // Left leg
-                        else if (i === 1) currentDelay += 600; // Right leg starts after left (slightly faster delay)
-                        else if (i === 2) currentDelay += 1200; // Horizontal line starts after both legs begin (slightly faster delay)
-                    } else if (path.classList.contains('logo-7')) {
-                        // For '7', it's a single path, so no internal stagger needed, just overall delay
-                        currentDelay = baseDelay; 
-                    }
-                    
-                    setTimeout(() => {
-                        path.style.transition = `stroke-dashoffset ${duration}s ${bezier}`;
-                        path.style.strokeDashoffset = 0; // Reveal the stroke
-                    }, currentDelay);
-                });
-            };
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
 
-            // Initial animation for A (left-to-right emphasis)
-            animateLeftToRightStrokes(logoA, 1500, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'); // Decreased baseDelay and duration
+                // Create trail particle
+                const trail = document.createElement('div');
+                trail.className = 'trail-particle';
+                trail.style.left = mouseX + 'px';
+                trail.style.top = mouseY + 'px';
+                
+                mouseTrail.appendChild(trail);
 
-            // Initial animation for 7 (left-to-right emphasis, starts after A)
-            // Calculate delay for 7 based on A's animation completion
-            const delayFor7 = 1500 + (logoA.length * 600) + 1500; // Adjusted base delay + A's max stagger + buffer
-            animateLeftToRightStrokes(logo7, delayFor7, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'); // Decreased duration
-
-
-            // Glow effect on hover (adjusted timing)
-            logoContainer.addEventListener('mouseenter', () => {
-                logoContainer.classList.add('glitch-active');
-                // Removed logoSVG.style.filter for no light glow
-                setTimeout(() => logoContainer.classList.remove('glitch-active'), 800); /* Slower glitch duration */
+                // Remove trail particle after animation
+                setTimeout(() => {
+                    trail.remove();
+                }, 1000);
             });
-            logoContainer.addEventListener('mouseleave', () => {
-                // Removed logoSVG.style.filter for no light glow
-            });
+        }
 
-            // 3D tilt
-            const walk = 15; /* Slightly less intense tilt */
-            const tilt = (e) => {
-                const { offsetWidth: width, offsetHeight: height } = logoContainer;
-                let { offsetX: x, offsetY: y } = e;
-                if (e.target.tagName === 'path' || e.target.tagName === 'svg') {
-                    x = e.clientX - logoContainer.getBoundingClientRect().left;
-                    y = e.clientY - logoContainer.getBoundingClientRect().top;
-                }
-                const xWalk = (x / width * walk) - (walk / 2);
-                const yWalk = (y / height * walk) - (walk / 2);
-                logoContainer.style.transform = `translate(-50%, -50%) perspective(800px) rotateY(${xWalk}deg) rotateX(${-yWalk}deg)`;
-            };
-            const resetTilt = () => {
-                logoContainer.style.transform = 'translate(-50%, -50%) perspective(800px) rotateY(0deg) rotateX(0deg)';
-            };
-            logoContainer.addEventListener('mousemove', tilt);
-            logoContainer.addEventListener('mouseleave', resetTilt);
+        // Initialize effects
+        window.addEventListener('load', () => {
+            createParticles();
+            createMouseTrail();
+        });
 
-            // Replay logo animation on click (new style)
-            logoContainer.addEventListener('click', () => {
-                // Replay A strokes
-                logoA.forEach((path, i) => {
-                    path.style.transition = 'none';
-                    path.style.strokeDasharray = path.getTotalLength();
-                    path.style.strokeDashoffset = path.getTotalLength();
-                    void path.offsetWidth;
-                    let delay = 300; // Base delay for A on click
-                    let duration = 3.0; // Decreased duration
-                    let bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-
-                    if (i === 0) { // First leg of A
-                        delay += 0;
-                    } else if (i === 1) { // Second leg of A
-                        delay += 600; // Decreased delay
-                    } else if (i === 2) { // Horizontal line of A
-                        delay += 1200; // Decreased delay
-                        duration = 2.5; // Shorter duration for horizontal line, but still slower
-                    }
-                    
-                    setTimeout(() => {
-                        path.style.transition = `stroke-dashoffset ${duration}s ${bezier}`;
-                        path.style.strokeDashoffset = 0;
-                    }, delay);
-                });
-
-                // Replay 7 stroke
-                const replayDelayFor7 = 300 + (logoA.length * 600) + 1500; // Adjusted delay
-                animateLeftToRightStrokes(logo7, replayDelayFor7, 3.0, 'cubic-bezier(0.25, 0.46, 0.45, 0.94)');
-
-                // Add glitch effect
-                logoContainer.classList.add('glitch-active');
-                // Removed logoSVG.style.filter for no light glow
-                setTimeout(() => logoContainer.classList.remove('glitch-active'), 800); /* Slower glitch duration */
-                // Removed logoSVG.style.filter for no light glow
-            });
+        // Update particles on resize
+        window.addEventListener('resize', () => {
+            document.getElementById('particles').innerHTML = '';
+            createParticles();
         });
     </script>
 </body>
