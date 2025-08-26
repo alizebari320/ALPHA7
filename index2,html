@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="ali.css">
+</head>
+<body>
+    <!-- Tech Background System -->
+    <div class="tech-background">
+        <div class="layer-1"></div>
+        <div class="layer-2"></div>
+        <div class="layer-3"></div>
+    </div>
+    
+    <!-- Light Rays -->
+    <div class="light-rays">
+        <div class="ray" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="ray" style="left: 30%; animation-delay: 1s;"></div>
+        <div class="ray" style="left: 50%; animation-delay: 2s;"></div>
+        <div class="ray" style="left: 70%; animation-delay: 3s;"></div>
+        <div class="ray" style="left: 90%; animation-delay: 4s;"></div>
+    </div>
+    
+    <!-- Dynamic Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Mouse Trail -->
+    <div class="mouse-trail" id="mouseTrail"></div>
+    
+    <div class="content">
+        <h1 class="alpha-title">ALPHA</h1>
+        <p class="coming-soon">coming soon</p>
+        <div class="decorative-line"></div>
+    </div>
+
+    <script src="ali.js"></script>
+</body>
+</html>
